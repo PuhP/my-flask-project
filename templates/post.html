@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <article class="mt-4">
+            <h1 class="fw-bold">{{ post.title }}</h1>
+            <p class="text-muted">Автор: <strong>{{ post.author }}</strong> | Дата: {{ post.date.strftime('%d.%m.%Y') }}</p>
+            <hr>
+            <img class="img-fluid rounded border mb-4" src="{{ url_for('static', filename='images/' + post.image_id) }}" alt="Post image">
+            <div class="post-text mb-5" style="white-space: pre-wrap; text-align: justify;">{{ post.text }}</div>
+        </article>
+
+        <section class="mb-5 p-4 bg-light rounded shadow-sm">
+            <h3 class="mb-4">Комментарии</h3>
+            
+            <form class="mb-5">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Оставьте комментарий</label>
+                    <textarea class="form-control" rows="3" placeholder="Ваш текст..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+
+            {% for comment in post.comments %}
+            <div class="d-flex mb-4">
+                <div class="flex-shrink-0">
+                    <img src="https://ui-avatars.com/api/?name={{ comment.author }}&background=random" class="rounded-circle" width="50">
+                </div>
+                <div class="ms-3 w-100">
+                    <div class="bg-white p-3 rounded border">
+                        <div class="fw-bold">{{ comment.author }}</div>
+                        {{ comment.text }}
+                    </div>
+
+                    {% if comment.replies %}
+                        {% for reply in comment.replies %}
+                        <div class="d-flex mt-3 ms-4">
+                            <div class="flex-shrink-0">
+                                <img src="https://ui-avatars.com/api/?name={{ reply.author }}&background=random" class="rounded-circle" width="40">
+                            </div>
+                            <div class="ms-3 w-100">
+                                <div class="bg-white p-2 px-3 rounded border shadow-sm">
+                                    <div class="fw-bold small">{{ reply.author }}</div>
+                                    <span class="small">{{ reply.text }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </div>
+</div>
+{% endblock %}
